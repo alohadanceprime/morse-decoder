@@ -18,7 +18,7 @@ class TrainConfig:
     BATCH_SIZE = 128
     NUM_EPOCHS = 1000
     LEARNING_RATE = 0.0005
-    WEIGHT_DECAY = 1e-6
+    WEIGHT_DECAY = 1e-5
     GRAD_CLIP_MAX_NORM = 5
     RANDOM_STATE = 42
     CHECKPOINT_DIR = "model_params"
