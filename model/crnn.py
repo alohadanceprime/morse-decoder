@@ -31,7 +31,7 @@ class CRNN(nn.Module):
             nn.Conv2d(256, ModelConfig.CNN_OUTPUT_CHANNELS, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm2d(ModelConfig.CNN_OUTPUT_CHANNELS),
             nn.ReLU(),
-            nn.Dropout(0.4)     # Последним слоям чаще свойственно переобучение => регуляризация сильнее
+            nn.Dropout(0.45)     # Последним слоям чаще свойственно переобучение => регуляризация сильнее
             # -> (batch_size, CNN_OUTPUT_CHANNELS, freq_bins, time_steps)
         )
 
@@ -42,9 +42,10 @@ class CRNN(nn.Module):
             num_layers=ModelConfig.NUM_RNN_LAYERS,       # Количество слоев LSTM
             bidirectional=True,                          # Двунаправленная LSTM (учитывает контекст до и после текущего момента)
             batch_first=True,                            # (batch, seq, features) вместо (seq, batch, features)
-            dropout=0.5                                  # Dropout
+            dropout=0.55                                  # Dropout
         )
 
+        self.dropout_fc = nn.Dropout(0.3)
         # Полносвязный слой для преобразования выхода LSTM в классы
         self.fc = nn.Linear(ModelConfig.RNN_HIDDEN_SIZE * 2, num_classes)  # *2 из-за bidirectional
 
@@ -58,6 +59,7 @@ class CRNN(nn.Module):
 
         x, _ = self.rnn(x)
 
+        x = self.dropout_fc(x)
         x = self.fc(x)
         # Приводим к формату для CTC Loss: (T, B, num_classes)
         x = x.permute(1, 0, 2)
