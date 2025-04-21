@@ -13,7 +13,7 @@ def main():
     symbols = [DataConfig.BLANK_CHAR] + list(DataConfig.SYMBOLS)
 
     model = CRNN(num_classes=len(symbols))
-    model.load_state_dict(torch.load("model_params_ep40.pth", map_location=device, weights_only=True))
+    model.load_state_dict(torch.load("model_params_ep48.pth", map_location=device, weights_only=True))
     model.to(device)
     model.eval()
 
